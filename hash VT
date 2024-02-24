@@ -1,1 +1,36 @@
+import requests
+
+ Replace 'YOUR_API_KEY' with your actual VirusTotal API key
+API_KEY =  
+
+# Function to query VirusTotal for file report
+def get_virustotal_report(hash_value):
+    url = f'https://www.virustotal.com/api/v3/files/{hash_value}'
+    headers = {
+        'x-apikey': API_KEY
+    }
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+#List of SHA256 hashes
+hashes = [
+  add hashes here 
+]
+
+ # Iterate through each SHA256 hash
+for sha256_hash in sha256_hashes:
+    # Query VirusTotal for file report
+    response = get_virustotal_report(sha256_hash)
+    
+    if 'data' in response:
+        attributes = response['data']['attributes']
+        md5_hash = attributes.get('md5')
+        sha1_hash = attributes.get('sha1')
+        
+        print(f"SHA256: {sha256_hash}")
+        print(f"MD5: {md5_hash}")
+        print(f"SHA1: {sha1_hash}")
+        print("\n")
+    else:
+        print(f"Error: File with SHA256 hash {sha256_hash} not found on VirusTotal\n")
 
