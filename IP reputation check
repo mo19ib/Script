@@ -1,1 +1,44 @@
+import requests
+import socket
 
+def get_domain_name(ip):
+    try:
+        domain_name, _, _ = socket.gethostbyaddr(ip)
+        return domain_name
+    except socket.herror:
+        return "N/A"
+
+def check_abuseipdb_reputation(api_key, ip_list):
+    url = "https://api.abuseipdb.com/api/v2/check"
+
+    for ip in ip_list:
+        headers = {
+            'Key': api_key,
+            'Accept': 'application/json',
+        }
+        params = {'ipAddress': ip}
+
+        response = requests.get(url, headers=headers, params=params)
+
+        if response.status_code == 200:
+            result = response.json()
+
+            if result['data']['abuseConfidenceScore'] > 0 or result['data']['totalReports'] > 0:
+                print(f"IP: {ip} - Domain: {get_domain_name(ip)} - Malicious (AbuseIPDB Confidence Score: {result['data']['abuseConfidenceScore']})")
+            else:
+                print(f"IP: {ip} - Domain: {get_domain_name(ip)} - Clean (AbuseIPDB Confidence Score: {result['data']['abuseConfidenceScore']})")
+        else:
+            print(f"Error checking IP {ip}: {response.status_code}")
+
+
+api_key_abuseipdb = 'add your API key'
+
+# 
+ip_list = [ 
+
+    add ip here 
+  
+   
+     ]
+
+check_abuseipdb_reputation(api_key_abuseipdb, ip_list)
